@@ -3,10 +3,28 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from "@apollo/client";
+
+
+const createApolloClient = () => {
+  return new ApolloClient({
+    link: new HttpLink({
+      uri: 'https://graphql.fauna.com/graphql',
+      headers: {
+        'authorization': 'Bearer fnAENeRZx7ACRQZrmiPnchOz5RteM5mfGSEgHAN2'
+      }
+    }),
+    cache: new InMemoryCache(),
+  });
+ };
+
+const client = createApolloClient();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
