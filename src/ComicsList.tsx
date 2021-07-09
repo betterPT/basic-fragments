@@ -6,10 +6,8 @@ import { ComicsListQuery } from "./generated/graphql";
 export const GET_ALL_COMICS = gql`
   query ComicsList {
     allComics {
-      data {
-        _id
+        id
         ...ComicsListItemFragment
-      }
     }
   }
   ${comicsListItemFragment}
@@ -28,8 +26,8 @@ export function ComicsList() {
     <div>
       <h1>Comics List</h1>
       <ul>
-        {data.allComics.data.map((comic: any) => (
-          <ComicsListItem key={comic._id} comic={comic} />
+        {data.allComics?.map((comic: any) => (
+          <ComicsListItem key={comic.id} comic={comic} />
         ))}
       </ul>
     </div>

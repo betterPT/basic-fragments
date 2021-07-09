@@ -1,15 +1,14 @@
-import { gql, useQuery } from '@apollo/client';
-import * as React from 'react';
-import { UsersListQuery } from './generated/graphql';
-import { usersListItemFragment, UsersListItem } from './UsersListItem';
+import { gql, useQuery } from "@apollo/client";
+import * as React from "react";
+import { comicsListItemFragment } from "./ComicsListItem";
+import { UsersListQuery } from "./generated/graphql";
+import { usersListItemFragment, UsersListItem } from "./UsersListItem";
 
 export const GET_ALL_USERS = gql`
   query UsersList {
     allUsers {
-      data {
-        _id
-        ...UsersListItemFragment
-      }
+      id
+      ...UsersListItemFragment
     }
   }
   ${usersListItemFragment}
@@ -26,10 +25,10 @@ export function UsersList() {
   }
   return (
     <div>
-      <h1>Comics List</h1>
+      <h1>Users List</h1>
       <ul>
-        {data.allUsers.data.map((user: any) => (
-          <UsersListItem key={user._id} user={user} />
+        {data.allUsers.map((user: any) => (
+          <UsersListItem key={user.id} user={user} />
         ))}
       </ul>
     </div>

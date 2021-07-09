@@ -12,199 +12,91 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
-  /** The `Long` scalar type represents non-fractional signed whole numeric values. Long can represent values between -(2^63) and 2^63 - 1. */
-  Long: any;
-  Time: any;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  DateTime: any;
 };
-
-
-
-
-
-
 
 export type Comic = {
   __typename?: 'Comic';
-  /** The document's ID. */
-  _id: Scalars['ID'];
-  issueNumber: Scalars['Int'];
-  publisher: Scalars['String'];
+  id: Scalars['Int'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
   title: Scalars['String'];
-  user?: Maybe<User>;
-  /** The document's timestamp. */
-  _ts: Scalars['Long'];
+  issueNumber: Scalars['Int'];
+  publisher?: Maybe<Scalars['String']>;
+  owner?: Maybe<User>;
 };
 
-/** 'Comic' input values */
-export type ComicInput = {
+export type ComicCreateInput = {
   title: Scalars['String'];
   publisher: Scalars['String'];
   issueNumber: Scalars['Int'];
-  user?: Maybe<ComicUserRelation>;
 };
-
-/** The pagination object for elements of type 'Comic'. */
-export type ComicPage = {
-  __typename?: 'ComicPage';
-  /** The elements of type 'Comic' in this page. */
-  data: Array<Maybe<Comic>>;
-  /** A cursor for elements coming after the current page. */
-  after?: Maybe<Scalars['String']>;
-  /** A cursor for elements coming before the current page. */
-  before?: Maybe<Scalars['String']>;
-};
-
-/** Allow manipulating the relationship between the types 'Comic' and 'User' using the field 'Comic.user'. */
-export type ComicUserRelation = {
-  /** Create a document of type 'User' and associate it with the current document. */
-  create?: Maybe<UserInput>;
-  /** Connect a document of type 'User' with the current document using its ID. */
-  connect?: Maybe<Scalars['ID']>;
-  /** If true, disconnects this document from 'User' */
-  disconnect?: Maybe<Scalars['Boolean']>;
-};
-
 
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Update an existing document in the collection of 'User' */
-  updateUser?: Maybe<User>;
-  /** Create a new document in the collection of 'User' */
-  createUser: User;
-  /** Update an existing document in the collection of 'Comic' */
-  updateComic?: Maybe<Comic>;
-  /** Delete an existing document in the collection of 'Comic' */
+  signupUser: User;
+  createComic?: Maybe<Comic>;
   deleteComic?: Maybe<Comic>;
-  /** Delete an existing document in the collection of 'User' */
-  deleteUser?: Maybe<User>;
-  /** Create a new document in the collection of 'Comic' */
-  createComic: Comic;
 };
 
 
-export type MutationUpdateUserArgs = {
-  id: Scalars['ID'];
-  data: UserInput;
-};
-
-
-export type MutationCreateUserArgs = {
-  data: UserInput;
-};
-
-
-export type MutationUpdateComicArgs = {
-  id: Scalars['ID'];
-  data: ComicInput;
-};
-
-
-export type MutationDeleteComicArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+export type MutationSignupUserArgs = {
+  data: UserCreateInput;
 };
 
 
 export type MutationCreateComicArgs = {
-  data: ComicInput;
+  data: ComicCreateInput;
+  ownerEmail: Scalars['String'];
+};
+
+
+export type MutationDeleteComicArgs = {
+  id: Scalars['Int'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  allComics: ComicPage;
-  comicsByTitle: ComicPage;
-  allUsers: UserPage;
-  /** Find a document from the collection of 'User' by its id. */
-  findUserByID?: Maybe<User>;
-  /** Find a document from the collection of 'Comic' by its id. */
-  findComicByID?: Maybe<Comic>;
-  usersByEmail: UserPage;
+  allUsers: Array<User>;
+  comicById?: Maybe<Comic>;
+  allComics?: Maybe<Array<Maybe<Comic>>>;
+  comicsByUser?: Maybe<Array<Maybe<Comic>>>;
 };
 
 
-export type QueryAllComicsArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
+export type QueryComicByIdArgs = {
+  id?: Maybe<Scalars['Int']>;
 };
 
 
-export type QueryComicsByTitleArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
-  title: Scalars['String'];
+export type QueryComicsByUserArgs = {
+  userUniqueInput: UserUniqueInput;
 };
 
-
-export type QueryAllUsersArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryFindUserByIdArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryFindComicByIdArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryUsersByEmailArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-};
-
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc'
+}
 
 export type User = {
   __typename?: 'User';
-  /** The document's ID. */
-  _id: Scalars['ID'];
-  /** The document's timestamp. */
-  _ts: Scalars['Long'];
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
   email: Scalars['String'];
-  comics: ComicPage;
+  comics: Array<Comic>;
 };
 
-
-export type UserComicsArgs = {
-  _size?: Maybe<Scalars['Int']>;
-  _cursor?: Maybe<Scalars['String']>;
-};
-
-/** Allow manipulating the relationship between the types 'User' and 'Comic'. */
-export type UserComicsRelation = {
-  /** Create one or more documents of type 'Comic' and associate them with the current document. */
-  create?: Maybe<Array<Maybe<ComicInput>>>;
-  /** Connect one or more documents of type 'Comic' with the current document using their IDs. */
-  connect?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  /** Disconnect the given documents of type 'Comic' from the current document using their IDs. */
-  disconnect?: Maybe<Array<Maybe<Scalars['ID']>>>;
-};
-
-/** 'User' input values */
-export type UserInput = {
+export type UserCreateInput = {
   email: Scalars['String'];
-  comics?: Maybe<UserComicsRelation>;
+  name?: Maybe<Scalars['String']>;
+  comics?: Maybe<Array<ComicCreateInput>>;
 };
 
-/** The pagination object for elements of type 'User'. */
-export type UserPage = {
-  __typename?: 'UserPage';
-  /** The elements of type 'User' in this page. */
-  data: Array<Maybe<User>>;
-  /** A cursor for elements coming after the current page. */
-  after?: Maybe<Scalars['String']>;
-  /** A cursor for elements coming before the current page. */
-  before?: Maybe<Scalars['String']>;
+export type UserUniqueInput = {
+  id?: Maybe<Scalars['Int']>;
+  email?: Maybe<Scalars['String']>;
 };
 
 export type ComicsListQueryVariables = Exact<{ [key: string]: never; }>;
@@ -212,14 +104,11 @@ export type ComicsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ComicsListQuery = (
   { __typename?: 'Query' }
-  & { allComics: (
-    { __typename?: 'ComicPage' }
-    & { data: Array<Maybe<(
-      { __typename?: 'Comic' }
-      & Pick<Comic, '_id'>
-      & ComicsListItemFragmentFragment
-    )>> }
-  ) }
+  & { allComics?: Maybe<Array<Maybe<(
+    { __typename?: 'Comic' }
+    & Pick<Comic, 'id'>
+    & ComicsListItemFragmentFragment
+  )>>> }
 );
 
 export type ComicsListItemFragmentFragment = (
@@ -232,14 +121,11 @@ export type UsersListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type UsersListQuery = (
   { __typename?: 'Query' }
-  & { allUsers: (
-    { __typename?: 'UserPage' }
-    & { data: Array<Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, '_id'>
-      & UsersListItemFragmentFragment
-    )>> }
-  ) }
+  & { allUsers: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+    & UsersListItemFragmentFragment
+  )> }
 );
 
 export type UsersListItemFragmentFragment = (
@@ -261,10 +147,8 @@ export const UsersListItemFragmentFragmentDoc = gql`
 export const ComicsListDocument = gql`
     query ComicsList {
   allComics {
-    data {
-      _id
-      ...ComicsListItemFragment
-    }
+    id
+    ...ComicsListItemFragment
   }
 }
     ${ComicsListItemFragmentFragmentDoc}`;
@@ -298,10 +182,8 @@ export type ComicsListQueryResult = Apollo.QueryResult<ComicsListQuery, ComicsLi
 export const UsersListDocument = gql`
     query UsersList {
   allUsers {
-    data {
-      _id
-      ...UsersListItemFragment
-    }
+    id
+    ...UsersListItemFragment
   }
 }
     ${UsersListItemFragmentFragmentDoc}`;
