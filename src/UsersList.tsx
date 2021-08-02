@@ -27,7 +27,7 @@ export function UsersList() {
     <div>
       <h1>Users List</h1>
       <ul>
-        {data.allUsers.map((user: any) => (
+        {data.allUsers?.map((user: any) => (
           <UsersListItem key={user.id} user={user} />
         ))}
       </ul>
